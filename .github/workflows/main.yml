@@ -1,0 +1,54 @@
+name: Build and publish manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version'
+        required: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+  security-events: write
+
+jobs:
+  build_and_push:
+    name: "Builds the binaries for Debian"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Vote app image
+        run: |
+          docker buildx build ./docker/vote -t ${{ env.REGISTRY}}/filipe-souza/example-voting-app-docker:vote-${{github.event.inputs.version }} -f Dockerfile --target release . --load
+          docker push ${{ env.REGISTRY }}/filipe-souza/voting-app-vote:vote-${{github.event.inputs.version }}
+
+      - name: Build Result app image
+        run: |
+          docker buildx build ./docker/result -t ${{ env.REGISTRY}}/filipe-souza/example-voting-app-docker:result-${{github.event.inputs.version }} -f Dockerfile --target release . --load
+          docker push ${{ env.REGISTRY }}/filipe-souza/voting-app-result:result-${{github.event.inputs.version }}
+
+      - name: Build Worker app image
+        run: |
+          docker buildx build -t ${{ env.REGISTRY}}/filipe-souza/example-voting-app-docker:worker-${{github.event.inputs.version }} -f Dockerfile --target release . --load
+          docker push ${{ env.REGISTRY }}/filipe-souza/example-voting-app-docker:worker-${{github.event.inputs.version }}
