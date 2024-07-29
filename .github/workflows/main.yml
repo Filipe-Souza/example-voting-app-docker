@@ -41,12 +41,12 @@ jobs:
       - name: Build Vote app image
         run: |
           docker buildx build ./vote -t ${{ env.REGISTRY}}/filipe-souza/example-voting-app-docker:vote-${{github.event.inputs.version }} --load
-          docker push ${{ env.REGISTRY }}/filipe-souza/voting-app-vote:vote-${{github.event.inputs.version }}
+          docker push ${{ env.REGISTRY }}/filipe-souza/example-voting-app-docker:vote-${{github.event.inputs.version }}
 
       - name: Build Result app image
         run: |
           docker buildx build ./result -t ${{ env.REGISTRY}}/filipe-souza/example-voting-app-docker:result-${{github.event.inputs.version }} --load
-          docker push ${{ env.REGISTRY }}/filipe-souza/voting-app-result:result-${{github.event.inputs.version }}
+          docker push ${{ env.REGISTRY }}/filipe-souza/example-voting-app-docker:result-${{github.event.inputs.version }}
 
       - name: Build Worker app image
         run: |
