@@ -17,7 +17,7 @@ io.on('connection', function (socket) {
   });
 });
 
-var pool = new pg.Pool({
+var pool = new Pool({
   connectionString: process.env.POSTGRES_HOST_STRING
 });
 
