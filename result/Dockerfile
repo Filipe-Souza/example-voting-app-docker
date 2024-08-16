@@ -9,13 +9,8 @@ ENV POSTGRES_HOST_STRING="postgres://${POSTGRES_USERNAME}:${POSTGRES_PWD}@${POST
 # add curl for healthcheck
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    curl \
+    curl tini \
     && rm -rf /var/lib/apt/lists/*
-
-# Add Tini for proper init of signals
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
 
 WORKDIR /app
 
@@ -30,8 +25,9 @@ RUN npm ci \
 
 COPY . .
 
-ENV PORT 5001
+ENV PORT 80
 
-EXPOSE 5001
+EXPOSE 80
 
-CMD ["/tini", "--", "node", "server.js"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["node", "server.js"]
