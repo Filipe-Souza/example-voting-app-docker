@@ -93,7 +93,7 @@ namespace Worker
                 catch (DbException e)
                 {
                     Console.Error.WriteLine("Waiting for db");
-                    Console.Error.WriteLine(conStrPgsql);
+                    Console.Error.WriteLine(connectionString);
                     Console.Error.WriteLine(e.Message);
                     Thread.Sleep(1000);
                 }
