@@ -1,5 +1,5 @@
 # Using official python runtime base image
-FROM python:3.11-slim as base
+FROM python:3.11-slim AS base
 
 ARG REDIS_HOST
 ENV REDIS_HOST=$REDIS_HOST

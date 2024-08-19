@@ -93,7 +93,7 @@ namespace Worker
                 catch (DbException)
                 {
                     Console.Error.WriteLine("Waiting for db");
-                    Console.Error.WriteLine(DbException.Message)
+                    Console.Error.WriteLine(DbException.Message);
                     Thread.Sleep(1000);
                 }
             }
